@@ -3,8 +3,8 @@
 # Setting up #######################################################################
 
 # Pacify git
-git config --global user.name "$2"
-git config --global user.email "$3"
+git config --global user.name "$1"
+git config --global user.email "$2"
 
 # Authentication settings
 git config --global github.user ${GITHUB_USER}
