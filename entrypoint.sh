@@ -45,7 +45,7 @@ tfmgr sanitize ${TEMPLATE_ID}
 
 # Initialize the datalad sub-dataset
 datalad create --force -c text2git -d . -D "${TEMPLATE_DESC}" ${TEMPLATE_ID}
-datalad save -m "add: populate template contents"
+datalad save -d ./${TEMPLATE_ID} -m "add: populate template contents"
 ####################################################################################
 
 # Finish intake ####################################################################
@@ -53,7 +53,7 @@ echo "Publishing new template..."
 
 # Create a GIN repo under templateflow/ org
 # Hopefully handled by datalad after https://github.com/datalad/datalad/issues/5935
-curl -v -X POST -H "Authorization: token ${GIN_TOKEN}" \
+curl -v -H "Authorization: token ${GIN_TOKEN}" \
      https://gin.g-node.org/api/v1/org/templateflow/repos \
      -d name="${TEMPLATE_ID}" -d description="${TEMPLATE_DESC}"
 
