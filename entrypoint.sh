@@ -12,12 +12,6 @@ git config --global user.email "$2"
 
 # Authentication settings
 git config --global hub.token ${GIHUB_TOKEN}
-# git config --global hub.oauthtoken ${GIHUB_TOKEN}
-# git config --global hub.protocol https
-# git config --global github.user ${GITHUB_USER}
-# git config --global github.token ${GIHUB_TOKEN}
-# git config --global gin.user nipreps-admin
-# git config --global gin.token ${GIN_TOKEN}
 
 unset GITHUB_USER
 unset GITHUB_TOKEN
