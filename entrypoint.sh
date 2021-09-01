@@ -4,22 +4,23 @@
 export HUB_CONFIG=/root/.hub/config
 mkdir -p /root/.hub
 chmod 700 /root/.hub
-echo -e "github.com:\n- user: ${GITHUB_USER}\n  oauth_token: ${GITHUB_TOKEN}\n" | install -m 600 /dev/stdin $HUB_CONFIG
-
-cat $HUB_CONFIG
+echo -e "github.com:\n- user: ${GITHUB_USER}\n  oauth_token: ${GITHUB_TOKEN}\n  protocol: https\n" | install -m 600 /dev/stdin $HUB_CONFIG
 
 # Pacify git
 git config --global user.name "$1"
 git config --global user.email "$2"
 
 # Authentication settings
-# git config --global github.user ${GITHUB_USER}
-# git config --global github.token ${GIHUB_TOKEN}
+git config --global hub.token ${GIHUB_TOKEN}
 # git config --global hub.oauthtoken ${GIHUB_TOKEN}
 # git config --global hub.protocol https
-# git config --global hub.token ${GIHUB_TOKEN}
+# git config --global github.user ${GITHUB_USER}
+# git config --global github.token ${GIHUB_TOKEN}
 # git config --global gin.user nipreps-admin
 # git config --global gin.token ${GIN_TOKEN}
+
+unset GITHUB_USER
+unset GITHUB_TOKEN
 
 # Create ~/.ssh folder
 mkdir -p /root/.ssh
@@ -36,7 +37,7 @@ eval "$(ssh-agent -s)"
 ssh-add - <<< "${SSH_PRIVATE_KEY}"
 
 # Install TemplateFlow
-datalad install -r git@github.com:templateflow/templateflow.git
+datalad install git@github.com:templateflow/templateflow.git
 cd templateflow/
 # Work on a new branch
 git checkout -b "add/${TEMPLATE_ID}"
