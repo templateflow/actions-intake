@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Setting up #######################################################################
-TEMPLATE_ID="$1"
 
 # Pacify git
 git config --global user.name "$2"
