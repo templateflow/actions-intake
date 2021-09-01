@@ -76,17 +76,17 @@ datalad save -d . -m "chore: setup GIN sibling"
 datalad create-sibling-github -d . --github-organization templateflow --access-protocol ssh --publish-depends gin-update -s github ${TEMPLATE_ID}
 datalad save -d . -m "chore: setup GH sibling"
 
-# # Enable Amazon S3 public remote
-# git annex initremote public-s3 \
-#                      type=S3 \
-#                      encryption=none \
-#                      public=yes \
-#                      bucket=templateflow \
-#                      exporttree=yes \
-#                      versioning=yes \
-#                      fileprefix="${TEMPLATE_ID}/" \
-#                      autoenable=true
-# datalad save -d . -m "chore: setup public-s3 annex-remote"
+# Enable Amazon S3 public remote
+git annex initremote public-s3 \
+                     type=S3 \
+                     encryption=none \
+                     public=yes \
+                     bucket=templateflow \
+                     exporttree=yes \
+                     versioning=yes \
+                     fileprefix="${TEMPLATE_ID}/" \
+                     autoenable=true
+datalad save -d . -m "chore: setup public-s3 annex-remote"
 
 datalad push --to gin-update .
 datalad push --to github .
