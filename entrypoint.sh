@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Setting up #######################################################################
-export GIT_EDITOR=/usr/bin/nano
+export GIT_EDITOR=/usr/bin/vim
 export HUB_CONFIG=/root/.hub/config
 mkdir -p /root/.hub
 chmod 700 /root/.hub
