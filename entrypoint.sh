@@ -48,7 +48,7 @@ git checkout -b "add/${TEMPLATE_ID}"
 tfmgr get ${TEMPLATE_ID}
 TEMPLATE_DESC=$( cat "${TEMPLATE_ID}/template_description.json" | jq -r ".Name" )
 echo "Sanitizing <${TEMPLATE_ID}> (${TEMPLATE_DESC})"
-# tfmgr sanitize ${TEMPLATE_ID}
+tfmgr sanitize ${TEMPLATE_ID}
 
 # Initialize the datalad sub-dataset
 datalad create --force -c text2git -d . -D "${TEMPLATE_DESC}" ${TEMPLATE_ID}
