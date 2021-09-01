@@ -66,7 +66,7 @@ datalad siblings add -d . --name gin-update \
 git config --unset-all remote.gin-update.annex-ignore
 datalad save -d . -m "chore: setup GIN sibling"
 
-datalad create-sibling-github -d . --github-organization templateflow --publish-depends gin-update -s github ${TEMPLATE_ID}
+datalad create-sibling-github -d . --github-organization templateflow --access-protocol ssh --publish-depends gin-update -s github ${TEMPLATE_ID}
 datalad save -d . -m "chore: setup GH sibling"
 
 # Enable Amazon S3 public remote
