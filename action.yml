@@ -1,0 +1,21 @@
+name: 'Create final submission as a PR'
+description: "Runs the final step of the intake process"
+inputs:
+  template-id:
+    description: 'The new TemplateFlow ID to be added'
+    required: true
+  name:
+    description: 'Name that will appear in the commit'
+    required: true
+    default: 'NiPreps Bot'
+  email:
+    description: 'Email that will appear in the commit'
+    required: true
+    default: 'nipreps@gmail.com'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.template-id }}
+    - ${{ inputs.name }}
+    - ${{ inputs.email }}
