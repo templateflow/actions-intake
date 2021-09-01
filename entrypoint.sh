@@ -18,8 +18,9 @@ git config --global hub.protocol https
 mkdir -p /root/.ssh
 chmod 700 /root/.ssh
 
-# Add github as trusted host
+# Add trusted hosts
 ssh-keyscan -t rsa -H github.com | install -m 600 /dev/stdin /root/.ssh/known_hosts
+ssh-keyscan -t rsa -H gin.g-node.org >> /root/.ssh/known_hosts
 
 # Start ssh agent
 eval "$(ssh-agent -s)"
