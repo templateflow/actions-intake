@@ -47,6 +47,11 @@ tfmgr sanitize ${TEMPLATE_ID}
 # Initialize the datalad sub-dataset
 datalad create --force -c text2git -d . -D "${TEMPLATE_DESC}" ${TEMPLATE_ID}
 datalad save -d ./${TEMPLATE_ID} -m "add: populate template contents"
+
+mkdir -p ./${TEMPLATE_ID}/.github/workflows
+curl -sSL https://raw.githubusercontent.com/templateflow/gha-workflow-superdataset/main/update.yml \
+     -o ./${TEMPLATE_ID}/.github/workflows/update-superdataset.yml
+datalad save -d ./${TEMPLATE_ID} -m "add: update superdataset action"
 ####################################################################################
 
 # Finish intake ####################################################################
