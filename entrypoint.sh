@@ -102,5 +102,14 @@ datalad save -m "fix(submodules): set the github repo url for new template ``${T
 # Conclude
 datalad push --to origin .
 
+echo "ADD: ``${TEMPLATE_ID}``" >> $HOME/pr-message.md
+echo "" >> $HOME/pr-message.txt
+echo "Name: ${TEMPLATE_DESC}" >> $HOME/pr-message.md
+echo "" >> $HOME/pr-message.txt
+echo "## Template description" >> $HOME/pr-message.md
+echo "```JSON" >> $HOME/pr-message.md
+cat ${TEMPLATE_ID}/template_description.json >> $HOME/pr-message.md
+echo "```"  >> $HOME/pr-message.md
+
 # Send PR
-hub pull-request -b templateflow:master -h "templateflow:add/${TEMPLATE_ID}"
+hub pull-request -b templateflow:master -h "templateflow:add/${TEMPLATE_ID}" -F $HOME/pr-message.md
