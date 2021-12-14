@@ -31,6 +31,13 @@ eval "$(ssh-agent -s)"
 # Add key to ssh agent
 ssh-add - <<< "${SSH_PRIVATE_KEY}"
 
+# Pull down template
+GH_SUBMITTER=$( python -c "import toml; from pathlib import Path; print(toml.loads((Path(\"${TEMPLATE_ID}.toml\").read_text())['github']['user'])" )
+pushd $HOME
+datalad install -g https://github.com/${GH_SUBMITTER}/${TEMPLATE_ID}
+datalad export-archive -d ${TEMPLATE_ID} $HOME/${TEMPLATE_ID}.tar.gz
+popd
+
 # Install TemplateFlow
 datalad install git@github.com:templateflow/templateflow.git
 cd templateflow/
@@ -40,7 +47,9 @@ git checkout -b "add/${TEMPLATE_ID}"
 ####################################################################################
 
 # Prepare intake ###################################################################
-tfmgr get ${TEMPLATE_ID}
+tar xzvf $HOME/${TEMPLATE_ID}.tar.gz
+find ${TEMPLATE_ID}/ -name "\.*" -exec rm -rf {} +
+
 TEMPLATE_DESC=$( cat "${TEMPLATE_ID}/template_description.json" | jq -r ".Name" )
 echo "Sanitizing <${TEMPLATE_ID}> (${TEMPLATE_DESC})"
 tfmgr sanitize ${TEMPLATE_ID}
@@ -66,14 +75,16 @@ curl -v -H "Authorization: token ${GIN_TOKEN}" \
 
 # Prepare siblings
 pushd ${TEMPLATE_ID}/
-datalad siblings add -d . --name gin-update \
+datalad siblings add -d . --name gin \
                  --pushurl git@gin.g-node.org:/templateflow/${TEMPLATE_ID}.git \
-                 --url https://gin.g-node.org/templateflow/${TEMPLATE_ID} \
-                 --as-common-datasrc gin
-git config --unset-all remote.gin-update.annex-ignore
+                 --url https://gin.g-node.org/templateflow/${TEMPLATE_ID}
+git config --unset-all remote.gin.annex-ignore
 datalad save -d . -m "chore: setup GIN sibling"
+datalad push --to gin
+datalad siblings configure --name gin --as-common-datasrc gin-src
+datalad push --to gin
 
-datalad create-sibling-github -d . --github-organization templateflow --access-protocol ssh --publish-depends gin-update -s github ${TEMPLATE_ID}
+datalad create-sibling-github -d . --github-organization templateflow --access-protocol ssh --publish-depends gin -s github ${TEMPLATE_ID}
 datalad save -d . -m "chore: setup GH sibling"
 
 # Enable Amazon S3 public remote
@@ -88,7 +99,7 @@ git annex initremote public-s3 \
                      autoenable=true
 datalad save -d . -m "chore: setup public-s3 annex-remote"
 
-datalad push --to gin-update .
+datalad push --to gin .
 datalad push --to github .
 
 # Ready!
@@ -100,9 +111,9 @@ sed -i -e "s+url = ./${TEMPLATE_ID}+url = https://github.com/templateflow/${TEMP
 datalad save -m "fix(submodules): set the github repo url for new template ``${TEMPLATE_ID}``"
 
 # Conclude
-datalad push --to origin .
+datalad push --to github .
 
-echo -e "ADD: \`\`${TEMPLATE_ID}\`\`\n\n" >> $HOME/pr-message.md
+echo -e "MRG: \`\`${TEMPLATE_ID}\`\`\n\n" >> $HOME/pr-message.md
 echo "" >> $HOME/pr-message.txt
 echo "Name: ${TEMPLATE_DESC}" >> $HOME/pr-message.md
 echo "" >> $HOME/pr-message.txt
