@@ -117,7 +117,7 @@ sed -i -e "s+url = ./${TEMPLATE_ID}+url = https://github.com/templateflow/${TEMP
 datalad save -m "fix(submodules): set the github repo url for new template ``${TEMPLATE_ID}``"
 
 # Conclude
-datalad push --to github .
+datalad push --to origin .
 
 echo -e "MRG: \`\`${TEMPLATE_ID}\`\`\n\n" >> $HOME/pr-message.md
 echo "" >> $HOME/pr-message.txt
