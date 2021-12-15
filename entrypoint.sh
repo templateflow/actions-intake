@@ -32,7 +32,8 @@ eval "$(ssh-agent -s)"
 ssh-add - <<< "${SSH_PRIVATE_KEY}"
 
 # Pull down template
-GH_SUBMITTER=$( python -c "import toml; from pathlib import Path; print(toml.loads((Path('templateflow/${TEMPLATE_ID}.toml').read_text())['github']['user'])" )
+CFG_FILE=$( find $PWD -type f -name "${TEMPLATE_ID}.toml" )
+GH_SUBMITTER=$( python -c "import toml; from pathlib import Path; print(toml.loads((Path('${CFG_FILE}').read_text())['github']['user'])" )
 pushd $HOME
 datalad install -g https://github.com/${GH_SUBMITTER}/${TEMPLATE_ID}
 datalad export-archive -d ${TEMPLATE_ID} $HOME/${TEMPLATE_ID}.tar.gz
