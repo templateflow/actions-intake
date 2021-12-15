@@ -33,7 +33,12 @@ ssh-add - <<< "${SSH_PRIVATE_KEY}"
 
 # Pull down template
 CFG_FILE=$( find $PWD -type f -name "${TEMPLATE_ID}.toml" )
-GH_SUBMITTER=$( python -c "import toml; from pathlib import Path; print(toml.loads((Path('${CFG_FILE}').read_text())['github']['user'])" )
+GH_SUBMITTER=$( python -c "import toml; from pathlib import Path; print(toml.loads((Path('${CFG_FILE}')).read_text())['github']['user']);" )
+
+if [[ "$GH_SUBMITTER" == "" ]]; then
+    echo "Could not find submitter's GH username"
+    exit 1
+fi
 pushd $HOME
 datalad install -g https://github.com/${GH_SUBMITTER}/${TEMPLATE_ID}
 datalad export-archive -d ${TEMPLATE_ID} $HOME/${TEMPLATE_ID}.tar.gz
