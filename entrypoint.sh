@@ -92,6 +92,7 @@ datalad push --to gin
 
 datalad create-sibling-github -d . --github-organization templateflow --access-protocol ssh --publish-depends gin -s github ${TEMPLATE_ID}
 datalad save -d . -m "chore: setup GH sibling"
+datalad push --to github
 
 # Enable Amazon S3 public remote
 git annex initremote public-s3 \
@@ -105,8 +106,8 @@ git annex initremote public-s3 \
                      autoenable=true
 datalad save -d . -m "chore: setup public-s3 annex-remote"
 
-datalad push --to gin .
-datalad push --to github .
+datalad push --to gin
+datalad push --to github
 
 # Ready!
 popd
