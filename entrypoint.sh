@@ -90,24 +90,26 @@ datalad push --to gin
 datalad siblings configure --name gin --as-common-datasrc gin-src
 datalad push --to gin
 
-datalad create-sibling-github -d . --github-organization templateflow --access-protocol ssh --publish-depends gin -s github ${TEMPLATE_ID}
+datalad create-sibling-github -d . --github-organization templateflow --access-protocol ssh --publish-depends gin -s origin ${TEMPLATE_ID}
 datalad save -d . -m "chore: setup GH sibling"
-datalad push --to github
+datalad push --to origin
 
 # Enable Amazon S3 public remote
-git annex initremote public-s3 \
+git annex initremote s3 \
                      type=S3 \
                      encryption=none \
                      public=yes \
                      bucket=templateflow \
                      exporttree=yes \
                      versioning=yes \
-                     fileprefix="${TEMPLATE_ID}/" \
-                     autoenable=true
-datalad save -d . -m "chore: setup public-s3 annex-remote"
+                     "fileprefix=${TEMPLATE_ID}/" \
+                     autoenable=true \
+                     "publicurl=https://templateflow.s3.amazonaws.com/"
+datalad save -d . -m "chore: setup s3 annex-remote"
+git annex export master --to s3
 
 datalad push --to gin
-datalad push --to github
+datalad push --to origin
 
 # Ready!
 popd
