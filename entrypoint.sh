@@ -86,13 +86,13 @@ datalad siblings add -d . --name gin \
                  --url https://gin.g-node.org/templateflow/${TEMPLATE_ID}
 git config --unset-all remote.gin.annex-ignore
 datalad save -d . -m "chore: setup GIN sibling"
-datalad push --to gin
+datalad push --to gin .
 datalad siblings configure --name gin --as-common-datasrc gin-src
-datalad push --to gin
+datalad push --to gin .
 
 datalad create-sibling-github -d . --github-organization templateflow --access-protocol ssh --publish-depends gin -s origin ${TEMPLATE_ID}
 datalad save -d . -m "chore: setup GH sibling"
-datalad push --to origin
+datalad push --to origin .
 
 # Enable Amazon S3 public remote
 git annex initremote s3 \
@@ -108,8 +108,8 @@ git annex initremote s3 \
 datalad save -d . -m "chore: setup s3 annex-remote"
 git annex export master --to s3
 
-datalad push --to gin
-datalad push --to origin
+datalad push --to gin .
+datalad push --to origin .
 
 # Ready!
 popd
