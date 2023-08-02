@@ -69,7 +69,7 @@ popd
 pushd templateflow/
 # Initialize the datalad sub-dataset
 datalad create -c text2git -d . -D "${TEMPLATE_DESC}" ${TEMPLATE_ID}
-echo "*.gii annex.largefiles=anything" >> ${TEMPLATE_ID}/.gitattributes
+cp .gitattributes ${TEMPLATE_ID}/.gitattributes
 
 mkdir -p ./${TEMPLATE_ID}/.github/workflows
 curl -sSL https://raw.githubusercontent.com/templateflow/gha-workflow-superdataset/main/update.yml \
