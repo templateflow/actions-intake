@@ -3,6 +3,8 @@
 # Setting up #######################################################################
 export GIT_EDITOR=/usr/bin/vim
 export HUB_CONFIG=/root/.hub/config
+export DATALAD_CREDENTIAL_GITHUB_TOKEN=${GITHUB_TOKEN}
+
 mkdir -p /root/.hub
 chmod 700 /root/.hub
 echo -e "github.com:\n- user: ${GITHUB_USER}\n  oauth_token: ${GITHUB_TOKEN}\n  protocol: https\n" | install -m 600 /dev/stdin $HUB_CONFIG
@@ -62,6 +64,8 @@ tfmgr sanitize ${TEMPLATE_ID}
 
 # Initialize the datalad sub-dataset
 datalad create --force -c text2git -d . -D "${TEMPLATE_DESC}" ${TEMPLATE_ID}
+echo "*.gii annex.largefiles=anything" >> .gitattributes
+
 datalad save -d ./${TEMPLATE_ID} -m "add: populate template contents"
 
 mkdir -p ./${TEMPLATE_ID}/.github/workflows
