@@ -48,30 +48,38 @@ popd
 
 # Install TemplateFlow
 datalad install git@github.com:templateflow/templateflow.git
-cd templateflow/
+pushd templateflow/
 # Work on a new branch
 git checkout -b "add/${TEMPLATE_ID}" origin/master
+popd
 
 ####################################################################################
-
 # Prepare intake ###################################################################
+mkdir -p $HOME/tmp
+
+pushd $HOME/tmp
 tar xzvf $HOME/${TEMPLATE_ID}.tar.gz
 find ${TEMPLATE_ID}/ -name "\.*" -exec rm -rf {} +
 
 TEMPLATE_DESC=$( cat "${TEMPLATE_ID}/template_description.json" | jq -r ".Name" )
 echo "Sanitizing <${TEMPLATE_ID}> (${TEMPLATE_DESC})"
 tfmgr sanitize ${TEMPLATE_ID}
+popd
 
+pushd templateflow/
 # Initialize the datalad sub-dataset
 datalad create --force -c text2git -d . -D "${TEMPLATE_DESC}" ${TEMPLATE_ID}
 echo "*.gii annex.largefiles=anything" >> .gitattributes
 
-datalad save -d ./${TEMPLATE_ID} -m "add: populate template contents"
-
 mkdir -p ./${TEMPLATE_ID}/.github/workflows
 curl -sSL https://raw.githubusercontent.com/templateflow/gha-workflow-superdataset/main/update.yml \
      -o ./${TEMPLATE_ID}/.github/workflows/update-superdataset.yml
-datalad save -d ./${TEMPLATE_ID} -m "add: update superdataset action"
+datalad save -d ./${TEMPLATE_ID} -m "maint: procedure + update superdataset action"
+
+# Finally populate contents
+mv -r $HOME/tmp/${TEMPLATE_ID}/* ${TEMPLATE_ID}/
+datalad save -d ./${TEMPLATE_ID} -m "add: populate template contents"
+
 ####################################################################################
 
 # Finish intake ####################################################################
