@@ -50,7 +50,7 @@ popd
 datalad install git@github.com:templateflow/templateflow.git
 cd templateflow/
 # Work on a new branch
-git checkout -b "add/${TEMPLATE_ID}"
+git checkout -b "add/${TEMPLATE_ID}" origin/master
 
 ####################################################################################
 
